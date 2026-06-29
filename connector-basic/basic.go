@@ -16,6 +16,7 @@ import (
 	"github.com/codenomdev/viona-plugins/util"
 	"github.com/codenomdev/viona/plugins"
 	"github.com/segmentfault/pacman/log"
+	"github.com/tidwall/gjson"
 	"golang.org/x/oauth2"
 )
 
@@ -96,7 +97,7 @@ func (g *Connector) ConnectorSlugName() string {
 	return "basic"
 }
 
-func (g *Connector) ConnectorSender(ctx *plugins.GinContext, receiverURL string) (redirectURL string) {
+func (g *Connector) ConnectorSender(ctx plugins.EchoContext, receiverURL string) (redirectURL string) {
 	oauth2Config := &oauth2.Config{
 		ClientID:     g.Config.ClientID,
 		ClientSecret: g.Config.ClientSecret,
@@ -111,8 +112,8 @@ func (g *Connector) ConnectorSender(ctx *plugins.GinContext, receiverURL string)
 	return oauth2Config.AuthCodeURL(state)
 }
 
-func (g *Connector) ConnectorReceiver(ctx *plugins.GinContext, receiverURL string) (userInfo plugins.ExternalLoginUserInfo, err error) {
-	code := ctx.Query("code")
+func (g *Connector) ConnectorReceiver(ctx plugins.EchoContext, receiverURL string) (userInfo plugins.ExternalLoginUserInfo, err error) {
+	code := ctx.QueryParam("code")
 	// Exchange code for token
 	oauth2Config := &oauth2.Config{
 		ClientID:     g.Config.ClientID,
@@ -179,9 +180,9 @@ func (g *Connector) ConnectorReceiver(ctx *plugins.GinContext, receiverURL strin
 func (g *Connector) formatUserInfo(userInfo plugins.ExternalLoginUserInfo) (
 	userInfoFormatted plugins.ExternalLoginUserInfo) {
 	userInfoFormatted = userInfo
-	if checker.IsInvalidUsername(userInfoFormatted.Username) {
-		userInfoFormatted.Username = replaceUsernameReg.ReplaceAllString(userInfoFormatted.Username, "_")
-	}
+	// if checker.IsInvalidUsername(userInfoFormatted.Username) {
+	userInfoFormatted.Username = replaceUsernameReg.ReplaceAllString(userInfoFormatted.Username, "_")
+	// }
 
 	usernameLength := utf8.RuneCountInString(userInfoFormatted.Username)
 	if usernameLength < 4 {

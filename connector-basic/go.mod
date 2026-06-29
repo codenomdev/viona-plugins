@@ -8,6 +8,13 @@ require (
 )
 
 require (
+	github.com/codenomdev/viona-plugins/util v0.0.0-20260629060735-e2d880687cee // indirect
+	github.com/tidwall/gjson v1.19.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
+)
+
+require (
 	github.com/LinkinStars/go-i18n/v2 v2.2.2 // indirect
 	github.com/codenomdev/viona v0.0.0-20260629054813-5108fdafaa73
 	github.com/google/uuid v1.6.0 // indirect
